@@ -227,7 +227,33 @@ For each human comment, extract and analyze:
 
 Write to `~/devmaxxing/reviews/daily/YYYY-MM-DD.md`
 
-### 5. Send Email Digest
+### 5. Append to Feedback History
+
+Also append each comment to the persistent history file `~/devmaxxing/reviews/history.md`.
+
+**Format for history file:**
+
+```markdown
+## YYYY-MM-DD
+
+### PR #123 - PR Title
+**From**: reviewer
+**Category**: Architecture
+**File**: path/to/file.rb:42
+
+> "The actual comment text"
+
+**Lesson**: What you learned from this feedback.
+
+---
+```
+
+**Rules:**
+- Only append NEW comments (check if PR # + reviewer + comment already exists)
+- Add a date header if this is the first entry for that date
+- Keep chronological order (newest at bottom)
+
+### 6. Send Email Digest (if configured)
 
 Read config from `~/.claude/skills/end-day/config.json`. If `resend_api_key` is empty, skip email.
 
@@ -279,7 +305,7 @@ curl -X POST 'https://api.resend.com/emails' \
     💡 Takeaway: [lesson]
 ```
 
-### 6. Report Summary
+### 7. Report Summary
 
 Print to terminal:
 
@@ -293,6 +319,7 @@ Standup:
 Feedback:
   - N human comments saved
   - Saved to ~/devmaxxing/reviews/daily/YYYY-MM-DD.md
+  - Appended N new comments to ~/devmaxxing/reviews/history.md
 
 Email sent to you@email.com ✓
 ```

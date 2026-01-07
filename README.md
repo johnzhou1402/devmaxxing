@@ -49,8 +49,9 @@ jacksonhuether on PR #455
 ```
 
 **Files saved:**
-- `~/devmaxxing/standup/2026-01-07.md`
-- `~/devmaxxing/reviews/daily/2026-01-07.md`
+- `~/devmaxxing/standup/2026-01-07.md` - daily standup
+- `~/devmaxxing/reviews/daily/2026-01-07.md` - daily feedback
+- `~/devmaxxing/reviews/history.md` - all feedback ever (appended)
 
 ## Prerequisites
 
@@ -66,7 +67,9 @@ jacksonhuether on PR #455
 
 ~/devmaxxing/
 ├── standup/        # Daily standup notes
-└── reviews/daily/  # PR feedback analysis
+└── reviews/
+    ├── daily/      # Daily PR feedback
+    └── history.md  # All feedback ever
 ```
 
 ## Email Setup (Optional)
