@@ -1,6 +1,6 @@
 # standup-bot
 
-For 10x engineers who hate standup because they don't remember everything they did!
+For 10x engineers who don't remember everything they did yesterday B)
 End-of-day workflow for engineers using Claude Code. Generates standup summaries, extracts PR feedback, and emails you a digest.
 
 ## Quick Start
