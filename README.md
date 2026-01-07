@@ -5,7 +5,7 @@ End-of-day workflow for engineers using Claude Code. Generates standup summaries
 ## Quick Start
 
 ```bash
-git clone https://github.com/johnzhou/standup-bot.git
+git clone https://github.com/johnzhou1402/standup-bot.git
 cd standup-bot
 ./setup.sh
 ```
