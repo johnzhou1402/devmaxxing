@@ -102,12 +102,16 @@ echo ""
 echo -e "${YELLOW}Creating directories...${NC}"
 
 mkdir -p ~/.claude/skills/end-day
+mkdir -p ~/.claude/skills/trivia
 mkdir -p ~/devmaxxing/standup
 mkdir -p ~/devmaxxing/reviews/daily
+mkdir -p ~/devmaxxing/trivia
 
 echo -e "${GREEN}✓ Created ~/.claude/skills/end-day/${NC}"
+echo -e "${GREEN}✓ Created ~/.claude/skills/trivia/${NC}"
 echo -e "${GREEN}✓ Created ~/devmaxxing/standup/${NC}"
 echo -e "${GREEN}✓ Created ~/devmaxxing/reviews/daily/${NC}"
+echo -e "${GREEN}✓ Created ~/devmaxxing/trivia/${NC}"
 
 # ─────────────────────────────────────────────────────────────
 # Step 4: Write config file
@@ -253,7 +257,70 @@ Also append each comment to the persistent history file `~/devmaxxing/reviews/hi
 - Add a date header if this is the first entry for that date
 - Keep chronological order (newest at bottom)
 
-### 6. Send Email Digest (if configured)
+### 6. Generate Trivia Questions
+
+For each PR, analyze the code changes to generate trivia questions about Whop's business systems.
+
+**Read the actual code files touched:**
+
+```bash
+# Get files changed in PR
+gh pr view <number> --json files --jq '.files[].path'
+
+# Read key files (services, workers, models)
+```
+
+**Generate questions about:**
+
+1. **Constants & Thresholds**: Magic numbers, limits, rates
+   - "What's the GMV threshold for X?" → "$500,000"
+   - "What fee percentage does Y charge?" → "2.5%"
+
+2. **Business Logic**: What systems do and why
+   - "What happens when a company graduates from the accelerator program?"
+   - "Which worker handles X?"
+
+3. **System Relationships**: How things connect
+   - "What service does X call to do Y?"
+   - "What feature flag controls Z?"
+
+4. **Domain Knowledge**: Business concepts
+   - "What's the difference between X and Y?"
+   - "When does Z get triggered?"
+
+**Question quality rules:**
+- Questions should test understanding, not memorization of syntax
+- Answers should be concise (1-2 sentences max)
+- Focus on "why" and "what" over "how"
+- Tie to business impact when possible
+
+**Save to `~/devmaxxing/trivia/questions.json`:**
+
+```json
+{
+  "questions": [
+    {
+      "id": "uuid",
+      "question": "What's the GMV threshold for accelerator program graduation?",
+      "answer": "$500,000 - after this, companies pay 2.5% card fees instead of 0%",
+      "system": "accelerator_program",
+      "source_pr": "PR #612",
+      "source_file": "backend/app/services/accelerator_program/graduate.rb",
+      "added_date": "2026-01-07",
+      "times_asked": 0,
+      "times_correct": 0
+    }
+  ]
+}
+```
+
+**Rules:**
+- Generate 2-5 questions per PR (quality over quantity)
+- Don't duplicate existing questions (check by similarity)
+- Skip trivial changes (typos, formatting, deps)
+- Focus on business logic, not boilerplate
+
+### 7. Send Email Digest (if configured)
 
 Read config from `~/.claude/skills/end-day/config.json`. If `resend_api_key` is empty, skip email.
 
@@ -305,7 +372,7 @@ curl -X POST 'https://api.resend.com/emails' \
     💡 Takeaway: [lesson]
 ```
 
-### 7. Report Summary
+### 8. Report Summary
 
 Print to terminal:
 
@@ -321,11 +388,183 @@ Feedback:
   - Saved to ~/devmaxxing/reviews/daily/YYYY-MM-DD.md
   - Appended N new comments to ~/devmaxxing/reviews/history.md
 
+Trivia:
+  - N new questions generated
+  - Total questions in bank: M
+  - Saved to ~/devmaxxing/trivia/questions.json
+
 Email sent to you@email.com ✓
 ```
 SKILL_EOF
 
-echo -e "${GREEN}✓ Created SKILL.md${NC}"
+echo -e "${GREEN}✓ Created end-day SKILL.md${NC}"
+
+# ─────────────────────────────────────────────────────────────
+# Step 6: Write trivia skill file
+# ─────────────────────────────────────────────────────────────
+cat > ~/.claude/skills/trivia/SKILL.md << 'TRIVIA_SKILL_EOF'
+---
+name: trivia
+description: Quiz yourself on Whop's business systems from your own PR history
+---
+
+# Trivia
+
+Test your knowledge of Whop's codebase with questions generated from your PR history.
+
+## Usage
+
+- `/trivia` - Random question from the bank
+- `/trivia stats` - Show your score and streaks
+- `/trivia [system]` - Question from specific system (e.g., `/trivia payments`)
+
+## Steps
+
+### 1. Load Question Bank
+
+Read questions from `~/devmaxxing/trivia/questions.json`.
+
+If the file doesn't exist or is empty, tell the user:
+```
+No trivia questions yet! Run /end-day after working on some PRs to generate questions.
+```
+
+### 2. Select a Question
+
+**Default mode (`/trivia`):**
+- Pick a random question, weighted towards:
+  - Questions asked fewer times (prioritize fresh questions)
+  - Questions answered incorrectly (reinforce learning)
+
+**System filter (`/trivia [system]`):**
+- Filter to questions matching that system
+- If no matches, suggest available systems
+
+**Stats mode (`/trivia stats`):**
+- Skip to step 5
+
+### 3. Ask the Question
+
+Present the question clearly:
+
+```
+🎯 Trivia Time!
+
+System: accelerator_program
+Source: PR #612
+
+Q: What's the GMV threshold for accelerator program graduation?
+
+Take a moment to think, then say "ready" or type your answer.
+```
+
+### 4. Reveal Answer & Score
+
+After user responds:
+
+```
+📝 Answer:
+$500,000 - after this, companies pay 2.5% card fees instead of 0%
+
+Source: backend/app/services/accelerator_program/graduate.rb
+```
+
+Then ask: "Did you get it right? (y/n)"
+
+**Update stats in questions.json:**
+- Increment `times_asked`
+- If correct, increment `times_correct`
+
+**Give encouraging feedback:**
+- Correct: "Nice! 🎉 You've gotten this right X/Y times."
+- Incorrect: "No worries! This one's tricky. You'll get it next time."
+
+### 5. Show Stats (for `/trivia stats`)
+
+```
+📊 Your Trivia Stats
+
+Total questions in bank: 47
+Questions answered: 32
+Accuracy: 78%
+
+By system:
+  payments:           12 questions, 83% accuracy
+  accelerator_program: 5 questions, 60% accuracy
+  checkout:            8 questions, 75% accuracy
+  ledger:              7 questions, 86% accuracy
+
+🔥 Current streak: 5 correct in a row
+🏆 Best streak: 12
+
+Tip: Run /trivia payments to focus on a specific area.
+```
+
+### 6. Offer Next Action
+
+```
+What next?
+- "again" or "a" - Another question
+- "stats" or "s" - See your stats
+- "quit" or "q" - Done for now
+```
+
+## Question Bank Format
+
+Located at `~/devmaxxing/trivia/questions.json`:
+
+```json
+{
+  "questions": [
+    {
+      "id": "unique-id",
+      "question": "The question text",
+      "answer": "The answer with context",
+      "system": "system_name",
+      "source_pr": "PR #123",
+      "source_file": "path/to/file.rb",
+      "added_date": "2026-01-07",
+      "times_asked": 5,
+      "times_correct": 4
+    }
+  ],
+  "stats": {
+    "current_streak": 5,
+    "best_streak": 12,
+    "last_played": "2026-01-07"
+  }
+}
+```
+
+## Available Systems
+
+Common systems you might see:
+- `payments` - Payment processing, Stripe, fees
+- `checkout` - Checkout flow, sessions
+- `ledger` - Ledger accounts, balances, transactions
+- `accelerator_program` - Fee waivers, graduation
+- `memberships` - User memberships, access
+- `webhooks` - Webhook handlers
+- `graphql` - API layer
+- `workers` - Background jobs
+TRIVIA_SKILL_EOF
+
+echo -e "${GREEN}✓ Created trivia SKILL.md${NC}"
+
+# Initialize empty trivia questions file if it doesn't exist
+if [[ ! -f ~/devmaxxing/trivia/questions.json ]]; then
+    cat > ~/devmaxxing/trivia/questions.json << 'TRIVIA_JSON_EOF'
+{
+  "questions": [],
+  "stats": {
+    "current_streak": 0,
+    "best_streak": 0,
+    "last_played": null
+  }
+}
+TRIVIA_JSON_EOF
+    echo -e "${GREEN}✓ Initialized trivia questions.json${NC}"
+fi
 
 # ─────────────────────────────────────────────────────────────
 # Done!
@@ -338,12 +577,15 @@ echo ""
 echo "What was created:"
 echo "  ~/.claude/skills/end-day/SKILL.md"
 echo "  ~/.claude/skills/end-day/config.json"
+echo "  ~/.claude/skills/trivia/SKILL.md"
 echo "  ~/devmaxxing/standup/"
 echo "  ~/devmaxxing/reviews/daily/"
+echo "  ~/devmaxxing/trivia/questions.json"
 echo ""
 echo -e "${YELLOW}Next steps:${NC}"
-echo "  1. Close and reopen Claude Code (to load the new skill)"
-echo "  2. Run: /end-day"
+echo "  1. Close and reopen Claude Code (to load the new skills)"
+echo "  2. Run: /end-day (generates standup + trivia questions)"
+echo "  3. Run: /trivia (quiz yourself)"
 echo ""
 if [[ -z "$RESEND_KEY" ]]; then
     echo -e "${BLUE}Tip: To enable email later, edit ~/.claude/skills/end-day/config.json${NC}"
