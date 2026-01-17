@@ -1,8 +1,196 @@
 {
-  "questions": [],
+  "questions": [
+    {
+      "id": "q-2026-01-07-001",
+      "question": "What's the GMV threshold for accelerator program graduation?",
+      "answer": "$500,000 - after this, companies pay 2.5% card fees instead of 0%",
+      "system": "accelerator_program",
+      "source_pr": "PR #495",
+      "source_file": "backend/app/services/accelerator_program/graduate.rb",
+      "added_date": "2026-01-07",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-07-002",
+      "question": "What are the four Stripe BNPL payment method types that are excluded from card auto-refund logic?",
+      "answer": "klarna, affirm, zip, afterpay_clearpay - these are treated as financing resolutions instead of card resolutions",
+      "system": "resolution_center",
+      "source_pr": "PR #587",
+      "source_file": "backend/app/workers/resolution_manager/auto_respond_worker.rb",
+      "added_date": "2026-01-07",
+      "times_asked": 1,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-07-003",
+      "question": "What three payment types have separate auto-refund thresholds in the Resolution Center?",
+      "answer": "Card, Financing (BNPL), and PayPal - each can have different threshold amounts configured in bot_metadata",
+      "system": "resolution_center",
+      "source_pr": "PR #587",
+      "source_file": "backend/app/workers/resolution_manager/auto_respond_worker.rb",
+      "added_date": "2026-01-07",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-07-004",
+      "question": "What service is called when a bot crosses a GMV threshold in the cache worker?",
+      "answer": "CreatorManager::CreateWhopCustomSupport - it creates a custom support chat for creators who reach certain revenue milestones",
+      "system": "creator_support",
+      "source_pr": "PR #420",
+      "source_file": "backend/app/workers/cache_manager/update_bot_payments_cache_worker.rb",
+      "added_date": "2026-01-07",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-07-005",
+      "question": "What database type should be used for financial columns like balances and amounts?",
+      "answer": "decimal with precision 10, scale 2 - never use float (precision issues) or bigint for cents",
+      "system": "database_patterns",
+      "source_pr": "PR #455",
+      "source_file": "backend/db/migrate/20260105225639_add_plaid_balance_to_payout_tokens.rb",
+      "added_date": "2026-01-07",
+      "times_asked": 1,
+      "times_correct": 1
+    },
+    {
+      "id": "q-2026-01-07-006",
+      "question": "How do you filter for internal platform transfers in the credit_transactions ClickHouse table?",
+      "answer": "Filter by credit_type = 'inner_platform_transfer' - no need for a separate credit_transaction_transfers mirror table",
+      "system": "clickhouse",
+      "source_pr": "PR #420",
+      "source_file": "backend/app/models/credit_transaction.rb",
+      "added_date": "2026-01-07",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-07-007",
+      "question": "What naming convention should be used for USD-denominated columns?",
+      "answer": "Add _in_usd suffix (e.g., total_earnings_with_transfers_in_usd) for clarity",
+      "system": "database_patterns",
+      "source_pr": "PR #420",
+      "source_file": "backend/db/migrate/",
+      "added_date": "2026-01-07",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-08-001",
+      "question": "What URL parameter triggers accelerator program signup?",
+      "answer": "isPlatform=true - use whop.com/new/?isPlatform=true or whop.com/sell/zf",
+      "system": "accelerator_program",
+      "source_pr": "PR #661",
+      "source_file": "frontend/apps/core/components/shared/onboarding/index.tsx",
+      "added_date": "2026-01-08",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-08-002",
+      "question": "When can a user delete a payment method from the billing portal?",
+      "answer": "Only when the payment method is not attached to an active subscription",
+      "system": "billing_portal",
+      "source_pr": "PR #630",
+      "source_file": "backend/app/services/payments_manager/",
+      "added_date": "2026-01-08",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-08-003",
+      "question": "Which payment processors are considered 'financing resolutions' for auto-refund purposes?",
+      "answer": "splitit, sezzle, and Stripe with BNPL payment methods (klarna, affirm, zip, afterpay_clearpay)",
+      "system": "resolution_center",
+      "source_pr": "PR #587",
+      "source_file": "backend/app/workers/resolution_manager/auto_respond_worker.rb",
+      "added_date": "2026-01-08",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-10-001",
+      "question": "What subscription status was missing from the billing portal that caused canceling subscriptions to not appear?",
+      "answer": "The 'canceling' status - subscriptions set to cancel at period end weren't shown because billingFetchMembershipsForCompany query didn't include this status filter",
+      "system": "billing_portal",
+      "source_pr": "PR #807",
+      "source_file": "frontend/apps/core/features/billing/",
+      "added_date": "2026-01-10",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-10-002",
+      "question": "What field should be used to display connected company volume that includes transfers?",
+      "answer": "total_earnings_with_transfers_in_usd - not total_memberships_earnings which only includes GMV",
+      "system": "connected_accounts",
+      "source_pr": "PR #761",
+      "source_file": "backend/app/graphql/types/",
+      "added_date": "2026-01-10",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-12-001",
+      "question": "What constant maps MassPay API attribute names to human-readable labels?",
+      "answer": "PayoutTokenAttribute::DATA_TYPE_LABEL_MAPPING - e.g., 'BankAccountNumber' becomes 'Bank account number'",
+      "system": "payouts",
+      "source_pr": "PR #809",
+      "source_file": "backend/app/services/payments_manager/create_payout_token.rb",
+      "added_date": "2026-01-12",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-12-002",
+      "question": "What field should be excluded from the public REST API for withdrawals?",
+      "answer": "withdrawal_type - it's internal-only for distinguishing regular vs clawback withdrawals",
+      "system": "public_api",
+      "source_pr": "PR #789",
+      "source_file": "backend/app/graphql/types/public/",
+      "added_date": "2026-01-12",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-12-003",
+      "question": "What check was missing in ExpireResourceWorker that caused 'once' duration discounts to be discarded prematurely?",
+      "answer": "The remaining_uses check - the worker only checked ended_at but didn't check if remaining_uses was still positive",
+      "system": "discounts",
+      "source_pr": "PR #813",
+      "source_file": "backend/app/workers/expire_resource_worker.rb",
+      "added_date": "2026-01-12",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-13-001",
+      "question": "What US territories are valid for payout address validation?",
+      "answer": "PR (Puerto Rico), GU (Guam), VI (US Virgin Islands), AS (American Samoa), MP (Northern Mariana Islands) - defined in US_TERRITORIES constant",
+      "system": "payouts",
+      "source_pr": "PR #979",
+      "source_file": "backend/app/services/payouts/",
+      "added_date": "2026-01-13",
+      "times_asked": 1,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-13-002",
+      "question": "What are the validation rules for custom statement descriptors on withdrawals?",
+      "answer": "Must be 5-22 characters, alphanumeric only (A-Z, a-z, 0-9), no forbidden words",
+      "system": "payouts",
+      "source_pr": "PR #963",
+      "source_file": "backend/app/graphql/mutations/ledger_accounts/create_ledger_withdrawal.rb",
+      "added_date": "2026-01-13",
+      "times_asked": 0,
+      "times_correct": 0
+    }
+  ],
   "stats": {
-    "current_streak": 0,
-    "best_streak": 0,
-    "last_played": null
+    "current_streak": 1,
+    "best_streak": 1,
+    "last_played": "2026-01-16"
   }
 }
