@@ -186,8 +186,119 @@
       "added_date": "2026-01-13",
       "times_asked": 0,
       "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-23-001",
+      "question": "What's the exponential backoff schedule for split pay memberships after max retries are reached?",
+      "answer": "3 days, 6 days, 12 days, 24 days, then capped at 30 days. Formula: 3 * 2^(attempts_beyond_max - 1) days.",
+      "system": "payments",
+      "source_pr": "PR #1837",
+      "source_file": "backend/app/services/receipt_manager/execute_payment.rb",
+      "added_date": "2026-01-23",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-23-002",
+      "question": "What's the default max payment retries before a subscription is normally canceled?",
+      "answer": "4 retries. Split pay memberships bypass this cancellation but still use exponential backoff afterward.",
+      "system": "payments",
+      "source_pr": "PR #1837",
+      "source_file": "backend/app/services/receipt_manager/payment_intents/update.rb",
+      "added_date": "2026-01-23",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-23-003",
+      "question": "How do you run embedded components against a local Rails backend?",
+      "answer": "Run `pnpm dev:local` from the monorepo root. It links packages, builds the SDK, and starts the dev server on port 3001.",
+      "system": "developer_platform",
+      "source_pr": "PR #1809",
+      "source_file": "package.json",
+      "added_date": "2026-01-23",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-23-004",
+      "question": "What environment variable overrides the embedded components GraphQL endpoint?",
+      "answer": "NEXT_PUBLIC_GRAPHQL_ENDPOINT for the Next.js app, and window.__WHOP_ELEMENTS_ORIGIN__ at runtime for the vanilla JS SDK.",
+      "system": "developer_platform",
+      "source_pr": "PR #1809",
+      "source_file": "developer-platform/packages/embedded-components-vanilla-js/src/url.ts",
+      "added_date": "2026-01-23",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-23-005",
+      "question": "What Tailwind class is gap-24 in pixels?",
+      "answer": "96px (6rem). This is usually too large for most UI layouts - a common mistake when copy-pasting spacing values.",
+      "system": "frontend",
+      "source_pr": "PR #1790",
+      "source_file": "frontend/apps/core/components/dashboard/withdrawals/modals/table-withdrawals-details-modal.tsx",
+      "added_date": "2026-01-23",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-23-006",
+      "question": "How do you enable saving payment methods in hosted checkout?",
+      "answer": "Pass ?setup_future_usage=off_session in the checkout URL. The backend reads this via CheckoutRequest.stripe_setup_future_usage.",
+      "system": "checkout",
+      "source_pr": "PR #1647",
+      "source_file": "frontend/packages/checkout/components/PaymentElement/use-resolved-setup-future-usage.ts",
+      "added_date": "2026-01-23",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-23-007",
+      "question": "Can Apple Pay/Google Pay tokens be reused for off_session charges?",
+      "answer": "Yes, the backend now supports reusing network tokens for off_session. This was added recently - previously it was blocked.",
+      "system": "checkout",
+      "source_pr": "PR #1647",
+      "source_file": "frontend/apps/core/components/checkout/shared/payment-request-button/express/index.dynamic.tsx",
+      "added_date": "2026-01-23",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-23-008",
+      "question": "What permission is required to transfer funds to/from connected accounts?",
+      "answer": "PayoutTransferFunds permission. The transferFunds mutation handles both add (platform->connected) and pull (connected->platform) operations.",
+      "system": "payouts",
+      "source_pr": "PR #1633",
+      "source_file": "frontend/apps/core/components/dashboard/connected-companies/detail/transfer-funds-modal.tsx",
+      "added_date": "2026-01-23",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-23-009",
+      "question": "What fields were added to the payout method REST API for better UX?",
+      "answer": "bank_name (maps to institution_name) and last4 (maps to account_reference). Returned at GET /api/v1/payout_methods.",
+      "system": "api",
+      "source_pr": "PR #1629",
+      "source_file": "backend/app/graphql/types/output/payout_token_type.rb",
+      "added_date": "2026-01-23",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-23-010",
+      "question": "What do you need to add when making changes to npm-published packages in developer-platform?",
+      "answer": "A changeset file using `pnpm changeset`. Without it, the new version won't be published to npm.",
+      "system": "developer_platform",
+      "source_pr": "PR #1539",
+      "source_file": "developer-platform/.changeset/chatty-numbers-stare.md",
+      "added_date": "2026-01-23",
+      "times_asked": 0,
+      "times_correct": 0
     }
   ],
+  "code_reviews": [],
   "stats": {
     "current_streak": 1,
     "best_streak": 1,
