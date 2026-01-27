@@ -8,7 +8,7 @@ https://github.com/johnzhou1402/devmaxxing/raw/main/hammerspoon/demo.mp4
 
 ## Hotkeys
 
-All use `Hyper` key (`Cmd + Alt + Ctrl`):
+All use `Hyper` key (`Cmd + Alt`):
 
 | Key | Action |
 |-----|--------|

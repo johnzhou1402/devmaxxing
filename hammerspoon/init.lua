@@ -1,5 +1,5 @@
--- Hyper key (cmd + alt + ctrl)
-local hyper = {"cmd", "alt", "ctrl"}
+-- Hyper key (cmd + alt)
+local hyper = {"cmd", "alt"}
 
 -- Left half of screen
 hs.hotkey.bind(hyper, "-", function()
