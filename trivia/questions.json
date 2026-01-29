@@ -210,17 +210,6 @@
       "times_correct": 0
     },
     {
-      "id": "q-2026-01-23-003",
-      "question": "How do you run embedded components against a local Rails backend?",
-      "answer": "Run `pnpm dev:local` from the monorepo root. It links packages, builds the SDK, and starts the dev server on port 3001.",
-      "system": "developer_platform",
-      "source_pr": "PR #1809",
-      "source_file": "package.json",
-      "added_date": "2026-01-23",
-      "times_asked": 0,
-      "times_correct": 0
-    },
-    {
       "id": "q-2026-01-23-004",
       "question": "What environment variable overrides the embedded components GraphQL endpoint?",
       "answer": "NEXT_PUBLIC_GRAPHQL_ENDPOINT for the Next.js app, and window.__WHOP_ELEMENTS_ORIGIN__ at runtime for the vanilla JS SDK.",
@@ -238,17 +227,6 @@
       "system": "frontend",
       "source_pr": "PR #1790",
       "source_file": "frontend/apps/core/components/dashboard/withdrawals/modals/table-withdrawals-details-modal.tsx",
-      "added_date": "2026-01-23",
-      "times_asked": 0,
-      "times_correct": 0
-    },
-    {
-      "id": "q-2026-01-23-006",
-      "question": "How do you enable saving payment methods in hosted checkout?",
-      "answer": "Pass ?setup_future_usage=off_session in the checkout URL. The backend reads this via CheckoutRequest.stripe_setup_future_usage.",
-      "system": "checkout",
-      "source_pr": "PR #1647",
-      "source_file": "frontend/packages/checkout/components/PaymentElement/use-resolved-setup-future-usage.ts",
       "added_date": "2026-01-23",
       "times_asked": 0,
       "times_correct": 0
@@ -296,12 +274,223 @@
       "added_date": "2026-01-23",
       "times_asked": 0,
       "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-26-001",
+      "question": "Can users add payout methods when they have $0 balance?",
+      "answer": "Yes - PR #2020 changed this. The destination selector and payment method UI now show regardless of balance. Only fees, exchange rates, and estimated delivery are hidden when balance is 0.",
+      "system": "payouts",
+      "source_pr": "PR #2020",
+      "source_file": "developer-platform/apps/embeddable-components/components/payouts/withdraw/views/request-withdrawal/index.tsx",
+      "added_date": "2026-01-26",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-26-002",
+      "question": "How do you rename or delete a payout method in the withdraw widget?",
+      "answer": "Hover over the payout method in the dropdown to reveal edit/delete icons. Edit opens a dialog for renaming, delete shows a confirmation dialog. Uses renamePayoutToken and deletePayoutToken GraphQL mutations.",
+      "system": "payouts",
+      "source_pr": "PR #1787",
+      "source_file": "developer-platform/apps/embeddable-components/components/payouts/withdraw/views/request-withdrawal/payout-token-select.tsx",
+      "added_date": "2026-01-26",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-26-003",
+      "question": "What are the two onboarding flows and how do they differ?",
+      "answer": "Seller flow: Team -> Products -> Payments -> Invoices -> Payouts. Platform flow: Team -> Connected Accounts -> Payouts -> Payments. Platform focuses on multi-tenant setup first.",
+      "system": "onboarding",
+      "source_pr": "PR #1694",
+      "source_file": "backend/app/services/onboarding/step_config.rb",
+      "added_date": "2026-01-26",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-26-004",
+      "question": "What triggers auto-completion of onboarding steps?",
+      "answer": "Backend callbacks: invite_member (AuthorizedUser created), create_product (Plan created), create_checkout_link (Plan created), create_invoice (Invoice created), complete_kyc (verification status -> submitted).",
+      "system": "onboarding",
+      "source_pr": "PR #1694",
+      "source_file": "backend/app/services/onboarding/step_service.rb",
+      "added_date": "2026-01-26",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-26-005",
+      "question": "What's the fallback display name for payout methods without nicknames?",
+      "answer": "'Unnamed' - the getDisplayName function returns this when nickname is null or undefined, ensuring consistent display across the dropdown and dialogs.",
+      "system": "payouts",
+      "source_pr": "PR #1787",
+      "source_file": "developer-platform/apps/embeddable-components/components/payouts/withdraw/views/request-withdrawal/payout-token-select.tsx",
+      "added_date": "2026-01-26",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-28-001",
+      "question": "When adding a new GraphQL field that provides the same data as an existing field (e.g., adding `errors: [Error!]!` alongside `errorMessage: String`), what should you do with the old field?",
+      "answer": "Mark it as deprecated with @deprecated directive - never delete fields from GraphQL schemas as this breaks existing clients. The frontend can stop requesting it, but the API must continue to return it.",
+      "system": "graphql",
+      "source_pr": "PR #2059",
+      "source_file": "backend/app/graphql/types/output/payout_account_required_attribute_type.rb",
+      "reviewer": "baked-dev",
+      "added_date": "2026-01-28",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-28-002",
+      "question": "In embedded components, when should you use IframedDialog vs the regular Dialog component?",
+      "answer": "Prefer regular Dialog - it has native dimming and is simpler. IframedDialog is only needed for special iframe-specific behaviors. Using IframedDialog when a regular Dialog works adds unnecessary complexity.",
+      "system": "developer_platform",
+      "source_pr": "PR #2060",
+      "source_file": "developer-platform/apps/embeddable-components/components/payouts/withdraw/views/request-withdrawal/cant-find-method-dialog.tsx",
+      "reviewer": "baked-dev",
+      "added_date": "2026-01-28",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-28-003",
+      "question": "A GraphQL mutation argument is named `request` and accepts user input text. What's wrong with this naming?",
+      "answer": "It's ambiguous - 'request' could mean many things. Use descriptive names like `requested_payout_method_name` that make the purpose clear without reading the description.",
+      "system": "graphql",
+      "source_pr": "PR #2060",
+      "source_file": "backend/app/graphql/mutations/ledger_accounts/request_payout_method.rb",
+      "reviewer": "jacksonhuether",
+      "added_date": "2026-01-28",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-28-004",
+      "question": "How should you define the return type for a GraphQL mutation that only needs to indicate success/failure?",
+      "answer": "`payload_type Boolean` - no need for a custom payload type or wrapping. Keep it simple when you just need true/false.",
+      "system": "graphql",
+      "source_pr": "PR #2060",
+      "source_file": "backend/app/graphql/mutations/ledger_accounts/request_payout_method.rb",
+      "reviewer": "jacksonhuether",
+      "added_date": "2026-01-28",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-28-005",
+      "question": "How should new GraphQL mutations access the current company?",
+      "answer": "Pass company_id as a required argument directly: `argument :company_id, ID, required: true`. The context[:current_company] pattern is deprecated and should not be used in new code.",
+      "system": "graphql",
+      "source_pr": "PR #2060",
+      "source_file": "backend/app/graphql/mutations/ledger_accounts/request_payout_method.rb",
+      "reviewer": "jacksonhuether",
+      "added_date": "2026-01-28",
+      "times_asked": 1,
+      "times_correct": 1
+    },
+    {
+      "id": "q-2026-01-28-006",
+      "question": "Should Admin::SendSlackWebhook calls in GraphQL mutations block the response?",
+      "answer": "No - make them async. Slack webhooks should not block the mutation response. Remove process_inline or use a background job so users don't wait for Slack delivery.",
+      "system": "backend",
+      "source_pr": "PR #2060",
+      "source_file": "backend/app/graphql/mutations/ledger_accounts/request_payout_method.rb",
+      "reviewer": "jacksonhuether",
+      "added_date": "2026-01-28",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-28-007",
+      "question": "A worker queries withdrawals by `updated_at` to monitor the payouts pipeline. What's the problem with this approach?",
+      "answer": "updated_at changes for many reasons (status changes, metadata updates, etc.), not just the state you care about. Use events instead - they capture specific state transitions and are more reliable for tracking changes.",
+      "system": "workers",
+      "source_pr": "PR #2083",
+      "source_file": "backend/app/workers/operations/payout_volume_summary_worker.rb",
+      "reviewer": "jacksonhuether",
+      "added_date": "2026-01-28",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-28-008",
+      "question": "A worker queries `WHERE updated_at > ?` on a table. What database change should accompany this?",
+      "answer": "Add an index on the updated_at column. Without an index, the query will do a full table scan which is slow on large tables.",
+      "system": "database",
+      "source_pr": "PR #2083",
+      "source_file": "backend/app/workers/operations/payout_error_summary_worker.rb",
+      "reviewer": "jacksonhuether",
+      "added_date": "2026-01-28",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-28-009",
+      "question": "What two constants should Sidekiq workers include for proper Sentry domain tagging?",
+      "answer": "TEAM_DOMAIN (e.g., :payments) and TEAM_SUBDOMAIN (e.g., :payouts). Both are needed - TEAM_DOMAIN alone is insufficient for proper error routing.",
+      "system": "workers",
+      "source_pr": "PR #2083",
+      "source_file": "backend/app/workers/operations/payout_error_summary_worker.rb",
+      "reviewer": "jacksonhuether",
+      "added_date": "2026-01-28",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-28-010",
+      "question": "When should you call `.reload` on an ActiveRecord object?",
+      "answer": "Only when you need to fetch changes made by another process or after a raw SQL update. Don't reload just to 'be safe' - each reload causes an extra SQL query. If you just saved the object, you already have the latest data.",
+      "system": "backend",
+      "source_pr": "PR #2059",
+      "source_file": "backend/app/services/payments_manager/payouts/sync_requirements.rb",
+      "reviewer": "jacksonhuether",
+      "added_date": "2026-01-28",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-28-011",
+      "question": "A method converts provider-specific error data into a standard format. What should it be named?",
+      "answer": "Use a name like `serialize_provider_errors` that describes both what it does (serialize) and what data it operates on (provider errors). Generic names like `format_errors` don't make the purpose clear.",
+      "system": "backend",
+      "source_pr": "PR #2059",
+      "source_file": "backend/app/models/payout_account_attribute.rb",
+      "reviewer": "jacksonhuether",
+      "added_date": "2026-01-28",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-28-012",
+      "question": "How should fields be ordered in GraphQL type definitions?",
+      "answer": "Alphabetically. This makes fields easier to find, prevents merge conflicts from random ordering, and maintains consistency across the codebase.",
+      "system": "graphql",
+      "source_pr": "PR #2059",
+      "source_file": "backend/app/graphql/types/output/payout_account_required_attribute_type.rb",
+      "reviewer": "jacksonhuether",
+      "added_date": "2026-01-28",
+      "times_asked": 0,
+      "times_correct": 0
+    },
+    {
+      "id": "q-2026-01-29-001",
+      "question": "You see this code:\n\n```tsx\nconst { isDemoMode } = useDemoMode();\n<CantFindMethodDialog isDemoMode={isDemoMode} />\n```\n\nWhat's the code smell, and how do you spot it in the future?",
+      "answer": "The parent is acting as a middleman - calling a hook and immediately passing the result as a prop without transforming it. The child should call useDemoMode() directly.\n\n**The one-liner test:** 'Am I just a middleman passing this value through?' If yes, let the child get it directly.\n\n**Exceptions:** (1) Parent transforms the value, (2) Parent also needs the value, (3) Child is a generic component that shouldn't know about app-specific hooks.",
+      "system": "react_patterns",
+      "source_pr": "PR #2060",
+      "source_file": "developer-platform/apps/embeddable-components/components/payouts/withdraw/views/request-withdrawal/index.tsx",
+      "reviewer": "baked-dev",
+      "added_date": "2026-01-29",
+      "times_asked": 0,
+      "times_correct": 0
     }
   ],
   "code_reviews": [],
   "stats": {
-    "current_streak": 1,
-    "best_streak": 1,
-    "last_played": "2026-01-16"
+    "current_streak": 2,
+    "best_streak": 2,
+    "last_played": "2026-01-28"
   }
 }
